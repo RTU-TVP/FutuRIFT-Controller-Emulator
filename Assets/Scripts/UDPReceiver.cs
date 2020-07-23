@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Threading;
 using System;
 
-public class TestUDP : MonoBehaviour
+public class UdpReceiver : MonoBehaviour
 {
     [SerializeField] private int port = 6065;
     UdpClient Listener;

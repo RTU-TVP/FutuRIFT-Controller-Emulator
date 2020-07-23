@@ -903,10 +903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c521798dc517d4493da5f79cb8f87a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pitch: 0
-  roll: 0
-  port: 7000
-  InHomeMode: 1
 --- !u!4 &2126113104
 Transform:
   m_ObjectHideFlags: 0
