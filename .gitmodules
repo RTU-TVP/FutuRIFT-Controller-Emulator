@@ -1,0 +1,3 @@
+[submodule "Assets/Futurift-Plugin-Unity"]
+	path = Assets/Futurift-Plugin-Unity
+	url = https://github.com/RTUITLab/Futurift-Plugin-Unity.git
