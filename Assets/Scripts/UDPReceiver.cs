@@ -13,12 +13,16 @@ public class UDPReceiver : MonoBehaviour {
     IPEndPoint RemoteIpEndPoint;
     Thread thread;
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource ();
-    float pitch = 0f;
+    float pitch = -15f;
     float roll = 0f;
     private const byte escapeSymbol = 253;
+    private (float, float) defaultPosition = (-15f, 0f);
+    private DateTime received;
+
     private void Start () {
         thread = new Thread (new ThreadStart (ThreadMethod));
         thread.Start ();
+        StartCoroutine(ResetToZero());
     }
 
     private void OnDestroy () {
@@ -27,7 +31,7 @@ public class UDPReceiver : MonoBehaviour {
 
     private void Update () {
         if (Input.GetKeyDown (KeyCode.Space)) {
-            pitch = roll = 0;
+            (pitch, roll) = defaultPosition;
         }
         transform.eulerAngles = new Vector3 (pitch, transform.eulerAngles.y, roll);
     }
@@ -38,6 +42,7 @@ public class UDPReceiver : MonoBehaviour {
             RemoteIpEndPoint = new IPEndPoint (IPAddress.Any, port);
 
             byte[] receiveBytes = Listener.Receive (ref RemoteIpEndPoint);
+            received = DateTime.UtcNow;
             (pitch, roll) = ParseBytes (receiveBytes);
         }
     }
@@ -63,6 +68,20 @@ public class UDPReceiver : MonoBehaviour {
             index++;
         }
         return BitConverter.ToSingle (data, localIndex - 4);
+    }
+
+    private IEnumerator ResetToZero()
+    {
+        var wait = new WaitForSeconds(1);
+        var waitDelay = TimeSpan.FromSeconds(3);
+        while (true)
+        {
+            yield return wait;
+            if (DateTime.UtcNow - received > waitDelay)
+            {
+                (pitch, roll) = defaultPosition;
+            }
+        }
     }
 
     public void LeanForwardNBack (float n) {
