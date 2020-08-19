@@ -9,7 +9,6 @@ public class PortShower : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textMesh.text = "Undefined";
     }
 
     // Update is called once per frame
