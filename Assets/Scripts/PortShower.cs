@@ -15,8 +15,8 @@ public class PortShower : MonoBehaviour
     void Update()
     {
     }
-    public void SetPortShowing(int number)
+    public void SetPortShowing(string comPort)
     {
-        textMesh.text = $"COM{number}";
+        textMesh.text = comPort;
     }
 }

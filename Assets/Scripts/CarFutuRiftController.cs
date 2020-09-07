@@ -3,26 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options;
+using Assets.Scripts;
 using ChairControl.ChairWork;
 using UnityEngine;
 
 public class CarFutuRiftController : MonoBehaviour {
     private FutuRiftController controller;
-    public ComPortOptions comPortOptions;
     public PortShower portShower;
     void Start () {
-        try
+        var comPort = EmulatorOptionsReader.ReadEmulatorOprions().comPort;
+        portShower.SetPortShowing(comPort);
+        int comPortNum = 1;
+        if (comPort.StartsWith("COM"))
         {
-            var filestr = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "port.txt"));
-            Debug.LogError(filestr);
-            comPortOptions.ComPort = int.Parse(filestr);
+            comPortNum = int.Parse(comPort.Substring(3));
         }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-        portShower.SetPortShowing(comPortOptions.ComPort);
-        controller = new FutuRiftController (comPortOptions, new FutuRiftOptions { interval = 50 });
+        controller = new FutuRiftController (new ComPortOptions { ComPort = comPortNum }, new FutuRiftOptions { interval = 50 });
         controller.Start ();
     }
 
