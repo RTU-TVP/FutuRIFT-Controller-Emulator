@@ -5,6 +5,6 @@ public class GoToSetup : MonoBehaviour
 {
     public void OpenSetup()
     {
-        SceneManager.LoadScene("SetupScene");
+        SceneManager.LoadScene("1.MainMenu");
     }
 }
