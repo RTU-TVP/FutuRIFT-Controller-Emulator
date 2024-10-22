@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/!Project Files/Scenes/SetupScene.unity
+    path: Assets/!Project Files/Scenes/1.MainMenu.unity
     guid: fe029ec97b25fbf4dbf0c1cd23790ee4
   - enabled: 1
-    path: Assets/!Project Files/Scenes/FuturiftV2.unity
+    path: Assets/!Project Files/Scenes/2.FuturiftV2.unity
     guid: 8578bed04351ae04ab78216c17b6111c
   - enabled: 1
-    path: Assets/!Project Files/Scenes/EmulatorScene.unity
+    path: Assets/!Project Files/Scenes/2.EmulatorScene.unity
     guid: 1b0d85840328e734aa212e888407c100
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
