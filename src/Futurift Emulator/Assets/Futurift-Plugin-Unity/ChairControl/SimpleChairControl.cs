@@ -1,9 +1,5 @@
 ﻿using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options;
 using ChairControl.ChairWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ChairControl
 {

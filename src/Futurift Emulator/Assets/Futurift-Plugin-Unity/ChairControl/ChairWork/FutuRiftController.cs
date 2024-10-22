@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Timers;
 using ChairControl.Extensions;
-using System.Net;
-using System.Net.Sockets;
-using UnityEngine;
 using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options;
 using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork;
 using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.DataSenders;
