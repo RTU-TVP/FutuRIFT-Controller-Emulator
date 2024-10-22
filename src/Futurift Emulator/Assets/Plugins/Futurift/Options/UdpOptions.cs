@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options
+namespace Futurift.Options
 {
     [Serializable]
     public class UdpOptions

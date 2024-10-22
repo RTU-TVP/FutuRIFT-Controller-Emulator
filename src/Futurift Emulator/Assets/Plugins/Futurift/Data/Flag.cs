@@ -1,6 +1,6 @@
-﻿namespace ChairControl.ChairWork
+﻿namespace Futurift.Data
 {
-    enum Flag : byte
+    internal enum Flag : byte
     {
         NextBlock = 0,
         FirstBlock = 1,

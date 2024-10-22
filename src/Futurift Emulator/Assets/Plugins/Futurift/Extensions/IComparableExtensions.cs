@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ChairControl.Extensions
+namespace Futurift.Extensions
 {
-    static class IComparableExtensions
+    internal static class ComparableExtensions
     {
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable<T>
         {
