@@ -1,5 +1,6 @@
-using Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options;
-using ChairControl.ChairWork;
+using Futurift;
+using Futurift.DataSenders;
+using Futurift.Options;
 using UnityEngine;
 
 public class CarFutuRiftController : MonoBehaviour
@@ -20,7 +21,15 @@ public class CarFutuRiftController : MonoBehaviour
             comPortNum = int.Parse(comPort[3..]);
         }
 
-        _controller = new FutuRiftController(new ComPortOptions(comPortNum), new FutuRiftOptions(50));
+        _controller = new FutuRiftController(
+            new ComPortSender(
+                new ComPortOptions(comPortNum)
+            ),
+            new FutuRiftOptions()
+            {
+                interval = 50
+            }
+        );
         _controller.Start();
     }
 
@@ -30,9 +39,9 @@ public class CarFutuRiftController : MonoBehaviour
         {
             return;
         }
-        
+
         var euler = transform.eulerAngles;
-        _controller.Pitch = (euler.x > 150 ? euler.x - 360 : euler.x);
+        _controller.Pitch = -(euler.x > 150 ? euler.x - 360 : euler.x);
         _controller.Roll = -(euler.z > 150 ? euler.z - 360 : euler.z);
     }
 
