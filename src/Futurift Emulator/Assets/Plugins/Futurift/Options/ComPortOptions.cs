@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options
+namespace Futurift.Options
 {
     [Serializable]
     public class ComPortOptions
     {
-        public int ComPort;
+        public int comPort;
 
         public ComPortOptions()
         {
@@ -13,7 +13,7 @@ namespace Assets.Plugins.UnityChairPlugin.ChairControl.ChairWork.Options
 
         public ComPortOptions(int comPort)
         {
-            ComPort = comPort;
+            this.comPort = comPort;
         }
     }
 }
