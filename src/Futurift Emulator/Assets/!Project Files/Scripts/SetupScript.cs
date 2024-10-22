@@ -13,7 +13,7 @@ public class SetupScript : MonoBehaviour
     [SerializeField] private TMP_Dropdown comPortsDropDown;
     [SerializeField] private TMP_InputField udpPortInput;
 
-    [SerializeField] private GameObject networkAddressesContainer;
+    [SerializeField] private Transform networkAddressesContainer;
     [SerializeField] private TMP_InputField exampleNetworkText;
 
     [SerializeField] private TextMeshProUGUI optionsFileTextLocation;
@@ -29,6 +29,9 @@ public class SetupScript : MonoBehaviour
         RefreshComPorts();
         ReadOptions();
         StartCoroutine(RefreshCourutine());
+
+        // RefreshComPorts();
+        // RefreshNetworkAddresses();
     }
 
     private void OnEnable()
@@ -96,8 +99,7 @@ public class SetupScript : MonoBehaviour
 
         while (localIPs.Length > _networkAddresses.Count)
         {
-            var newText = Instantiate(exampleNetworkText, networkAddressesContainer.transform);
-            newText.gameObject.transform.localPosition -= new Vector3(0, _networkAddresses.Count * 60, 0);
+            var newText = Instantiate(exampleNetworkText, networkAddressesContainer);
             newText.gameObject.SetActive(true);
             _networkAddresses.Add(newText);
         }
