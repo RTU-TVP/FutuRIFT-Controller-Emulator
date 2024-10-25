@@ -29,9 +29,6 @@ public class SetupScript : MonoBehaviour
         RefreshComPorts();
         ReadOptions();
         StartCoroutine(RefreshCourutine());
-
-        // RefreshComPorts();
-        // RefreshNetworkAddresses();
     }
 
     private void OnEnable()

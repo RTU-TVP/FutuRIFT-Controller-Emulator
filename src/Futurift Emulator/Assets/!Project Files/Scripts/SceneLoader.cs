@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartEmulatorScript : MonoBehaviour
+public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private string sceneName = "EmulatorScene";
+    [SerializeField] private string sceneName;
 
     private AsyncOperation _asyncOperation;
 
@@ -20,7 +20,7 @@ public class StartEmulatorScript : MonoBehaviour
         }
     }
 
-    public void StartEmulator()
+    public void LoadScene()
     {
         _asyncOperation.allowSceneActivation = true;
     }
