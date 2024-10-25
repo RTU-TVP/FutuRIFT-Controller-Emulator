@@ -41,8 +41,8 @@ public class CarFutuRiftController : MonoBehaviour
         }
 
         var euler = transform.eulerAngles;
-        _controller.Pitch = -(euler.x > 150 ? euler.x - 360 : euler.x);
-        _controller.Roll = -(euler.z > 150 ? euler.z - 360 : euler.z);
+        _controller.Pitch = euler.x > 180 ? euler.x - 360 : euler.x;
+        _controller.Roll = -(euler.z > 180 ? euler.z - 360 : euler.z);
     }
 
     private void OnDestroy()
