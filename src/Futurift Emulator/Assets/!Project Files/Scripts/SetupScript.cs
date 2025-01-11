@@ -26,7 +26,6 @@ public class SetupScript : MonoBehaviour
 
     private void Start()
     {
-        RefreshComPorts();
         ReadOptions();
         StartCoroutine(RefreshCoroutine());
     }
