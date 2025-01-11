@@ -3,8 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class Bootstrap : MonoBehaviour
 {
+    [SerializeField] private int sceneIndex = 1;
+    
     private void Start()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadSceneAsync(sceneIndex);
     }
 }

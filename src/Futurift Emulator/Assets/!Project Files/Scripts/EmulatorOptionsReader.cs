@@ -4,9 +4,9 @@ using UnityEngine;
 
 internal class EmulatorOptionsReader
 {
-    public static string OptionsFileLocation => Path.Combine(Directory.GetCurrentDirectory(), "options.json");
+    public static string OptionsFileLocation => Path.Combine(Application.persistentDataPath, "options.json");
 
-    public static EmulatorOptions ReadEmulatorOprions()
+    public static EmulatorOptions ReadEmulatorOptions()
     {
         if (!File.Exists(OptionsFileLocation))
         {
@@ -17,12 +17,12 @@ internal class EmulatorOptionsReader
         {
             var text = File.ReadAllText(OptionsFileLocation);
             var options = JsonUtility.FromJson<EmulatorOptions>(text);
-            return options;
+            return options ?? new EmulatorOptions { ListenUdpPortNumber = 6065 };
         }
         catch (Exception ex)
         {
-            Debug.LogError("Can't read options file " + ex.Message);
-            throw;
+            Debug.LogError($"Can't read options file: {ex.Message}");
+            return new EmulatorOptions { ListenUdpPortNumber = 6065 };
         }
     }
 }
