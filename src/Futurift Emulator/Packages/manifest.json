@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.tvp.futurift-plugin": "https://github.com/RTU-TVP/FutuRIFT-Plugin-Unity.git?path=src/FutuRIFT-Plugin/Assets/Plugins/FutuRIFT",
     "com.unity.ide.rider": "3.0.31",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.postprocessing": "3.4.0",
