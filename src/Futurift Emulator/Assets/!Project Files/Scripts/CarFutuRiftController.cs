@@ -1,35 +1,26 @@
-using Futurift;
-using Futurift.DataSenders;
-using Futurift.Options;
+using FutuRIFT;
 using UnityEngine;
 
-public class CarFutuRiftController : MonoBehaviour
+public class CarFutuRIFTController : MonoBehaviour
 {
-    [SerializeField] private PortShower portShower;
-
-    private FutuRiftController _controller;
+    private FutuRIFTController _controller;
 
     private void Start()
     {
-        var comPort = EmulatorOptionsReader.ReadEmulatorOprions().ComPort;
-
-        portShower.SetPortShowing(comPort);
+        var comPort = EmulatorOptionsReader.ReadEmulatorOptions().ComPort;
 
         var comPortNum = 1;
-        if (comPort.StartsWith("COM"))
+        if (comPort != null && comPort.StartsWith("COM"))
         {
             comPortNum = int.Parse(comPort[3..]);
         }
 
-        _controller = new FutuRiftController(
+        _controller = new FutuRIFTController(
             new ComPortSender(
-                new ComPortOptions(comPortNum)
-            ),
-            new FutuRiftOptions()
-            {
-                interval = 50
-            }
+                comPortNum
+            )
         );
+
         _controller.Start();
     }
 
