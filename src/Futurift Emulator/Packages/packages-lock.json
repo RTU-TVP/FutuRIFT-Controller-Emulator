@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.tvp.futurift-plugin": {
+      "version": "https://github.com/RTU-TVP/FutuRIFT-Plugin-Unity.git?path=src/FutuRIFT-Plugin/Assets/Plugins/FutuRIFT",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "af84ca5c2d75ec5d648c8ff85dcefb0912bef070"
+    },
     "com.unity.ext.nunit": {
       "version": "2.0.5",
       "depth": 1,
