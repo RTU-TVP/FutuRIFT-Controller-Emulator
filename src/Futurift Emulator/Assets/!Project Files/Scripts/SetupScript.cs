@@ -6,6 +6,7 @@ using System.Net;
 using UnityEngine;
 using TMPro;
 using System.IO;
+using System.Net.Sockets;
 using UnityEngine.UI;
 
 public class SetupScript : MonoBehaviour
@@ -19,8 +20,7 @@ public class SetupScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI optionsFileTextLocation;
 
     [SerializeField] private Button saveButton;
-    [SerializeField] private Button refreshComPortsButton;
-    [SerializeField] private Button refreshNetworkAddressesButton;
+    [SerializeField] private Button startEmulatorButton;
 
     private readonly List<TMP_InputField> _networkAddresses = new();
 
@@ -28,28 +28,26 @@ public class SetupScript : MonoBehaviour
     {
         RefreshComPorts();
         ReadOptions();
-        StartCoroutine(RefreshCourutine());
+        StartCoroutine(RefreshCoroutine());
     }
 
     private void OnEnable()
     {
+        startEmulatorButton.onClick.AddListener(SaveOptions);
         saveButton.onClick.AddListener(SaveOptions);
-        refreshComPortsButton.onClick.AddListener(RefreshComPorts);
-        refreshNetworkAddressesButton.onClick.AddListener(RefreshNetworkAddresses);
     }
 
     private void OnDisable()
     {
+        startEmulatorButton.onClick.RemoveListener(SaveOptions);
         saveButton.onClick.RemoveListener(SaveOptions);
-        refreshComPortsButton.onClick.RemoveListener(RefreshComPorts);
-        refreshNetworkAddressesButton.onClick.RemoveListener(RefreshNetworkAddresses);
     }
 
     private void ReadOptions()
     {
         optionsFileTextLocation.text = EmulatorOptionsReader.OptionsFileLocation;
 
-        var options = EmulatorOptionsReader.ReadEmulatorOprions();
+        var options = EmulatorOptionsReader.ReadEmulatorOptions();
         udpPortInput.text = options.ListenUdpPortNumber == 0 ? "6065" : options.ListenUdpPortNumber.ToString();
 
         comPortsDropDown.value = comPortsDropDown.options
@@ -73,37 +71,46 @@ public class SetupScript : MonoBehaviour
         File.WriteAllText(EmulatorOptionsReader.OptionsFileLocation, optionsJson);
     }
 
-    private IEnumerator RefreshCourutine()
+    private IEnumerator RefreshCoroutine()
     {
         var wait = new WaitForSeconds(1);
+
         while (true)
         {
             RefreshComPorts();
             RefreshNetworkAddresses();
+        
             yield return wait;
         }
     }
 
     private void RefreshNetworkAddresses()
     {
-        var localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+        var ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
+            .Where(ip => ip.AddressFamily == AddressFamily.InterNetwork)
+            .ToList();
 
-        while (localIPs.Length < _networkAddresses.Count)
+        if (ipAddresses.All(ip => ip.ToString() != "127.0.0.1"))
         {
-            Destroy(_networkAddresses[0].gameObject);
-            _networkAddresses.RemoveAt(0);
+            ipAddresses.Add(IPAddress.Parse("127.0.0.1"));
         }
 
-        while (localIPs.Length > _networkAddresses.Count)
+        for (var i = _networkAddresses.Count - 1; i >= ipAddresses.Count; i--)
+        {
+            Destroy(_networkAddresses[i].gameObject);
+            _networkAddresses.RemoveAt(i);
+        }
+
+        for (var i = _networkAddresses.Count; i < ipAddresses.Count; i++)
         {
             var newText = Instantiate(exampleNetworkText, networkAddressesContainer);
             newText.gameObject.SetActive(true);
             _networkAddresses.Add(newText);
         }
 
-        for (var i = 0; i < localIPs.Length; i++)
+        for (var i = 0; i < ipAddresses.Count; i++)
         {
-            _networkAddresses[i].text = localIPs[i].ToString();
+            _networkAddresses[i].text = ipAddresses[i].ToString();
         }
     }
 
