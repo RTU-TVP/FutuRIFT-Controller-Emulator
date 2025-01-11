@@ -3,6 +3,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class UDPReceiver : MonoBehaviour
@@ -24,49 +25,63 @@ public class UDPReceiver : MonoBehaviour
     {
         _thread = new Thread(ThreadMethod);
         _thread.Start();
-        StartCoroutine(ResetToZero());
+        _ = ResetToZeroAsync(_cancellationTokenSource.Token);
     }
 
     private void OnDestroy()
     {
         _cancellationTokenSource.Cancel();
-        _listener.Close();
+        _listener?.Close();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            (_pitch, _roll) = _defaultPosition;
+            ResetPitchAndRoll();
         }
 
-        LeanForwardNBack(_pitch);
-        LeanRightNLeft(_roll);
+        AdjustPitch(_pitch);
+        AdjustRoll(_roll);
     }
 
-    private void ThreadMethod()
+    private void ResetPitchAndRoll()
     {
-        var port = EmulatorOptionsReader.ReadEmulatorOprions().ListenUdpPortNumber;
+        (_pitch, _roll) = _defaultPosition;
+    }
+
+    private async void ThreadMethod()
+    {
+        var port = EmulatorOptionsReader.ReadEmulatorOptions().ListenUdpPortNumber;
         _listener = new UdpClient(port);
+        _remoteIpEndPoint = new IPEndPoint(IPAddress.Any, port);
+
         while (!_cancellationTokenSource.IsCancellationRequested)
         {
-            _remoteIpEndPoint = new IPEndPoint(IPAddress.Any, port);
             try
             {
-                var receiveBytes = _listener.Receive(ref _remoteIpEndPoint);
-                if (receiveBytes.Length == 0)
-                {
-                    continue;
-                }
-
+                var result = await _listener.ReceiveAsync(); // Используем асинхронный метод
                 _received = DateTime.UtcNow;
-                (_pitch, _roll) = ParseBytes(receiveBytes);
+                (_pitch, _roll) = ParseBytes(result.Buffer);
             }
-            catch (SocketException sex) when (sex.SocketErrorCode == SocketError.Interrupted)
+            catch (SocketException ex)
+            {
+                Debug.LogError($"Socket error: {ex.Message}");
+            }
+            catch (ObjectDisposedException)
             {
                 Debug.Log("Connection closed");
+                break;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Unexpected error: {ex.Message}");
             }
         }
+        
+        Debug.Log("ThreadMethod finished");
+        
+        _listener.Close();
     }
 
     private (float pitch, float roll) ParseBytes(byte[] receiveBytes)
@@ -80,33 +95,30 @@ public class UDPReceiver : MonoBehaviour
 
     private float ParseFloat(byte[] data, ref byte index)
     {
-        var localIndex = index;
+        var floatBytes = new byte[4];
         for (var i = 0; i < 4; i++)
         {
             if (data[index] == ESCAPE_SYMBOL)
             {
                 index++;
-                data[localIndex] = (byte)(data[index] + ESCAPE_SYMBOL);
+                floatBytes[i] = (byte)(data[index] + ESCAPE_SYMBOL);
             }
             else
             {
-                data[localIndex] = data[index];
+                floatBytes[i] = data[index];
             }
-
-            localIndex++;
             index++;
         }
 
-        return BitConverter.ToSingle(data, localIndex - 4);
+        return BitConverter.ToSingle(floatBytes, 0);
     }
 
-    private IEnumerator ResetToZero()
+    private async Task ResetToZeroAsync(CancellationToken cancellationToken)
     {
-        var wait = new WaitForSeconds(1);
         var waitDelay = TimeSpan.FromSeconds(3);
-        while (true)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            yield return wait;
+            await Task.Delay(1000, cancellationToken);
             if (DateTime.UtcNow - _received > waitDelay)
             {
                 (_pitch, _roll) = _defaultPosition;
@@ -114,13 +126,19 @@ public class UDPReceiver : MonoBehaviour
         }
     }
 
-    public void LeanForwardNBack(float n)
+    private void AdjustPitch(float n)
     {
         transform.localEulerAngles = new Vector3(n, transform.localEulerAngles.y, transform.localEulerAngles.z);
     }
 
-    public void LeanRightNLeft(float n)
+    private void AdjustRoll(float n)
     {
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, n);
     }
+}
+
+internal class EmulatorOptions
+{
+    public string ComPort;
+    public int ListenUdpPortNumber;
 }
