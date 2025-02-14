@@ -161,10 +161,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 25814339}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee68320029e013a44ad11b35698a5d5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 10b5c9c69799cd042ac4d856b4b416b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoLoadNextScene: 1
+  sceneIndex: 1
+  autoLoadScene: 1
 --- !u!1 &880175247
 GameObject:
   m_ObjectHideFlags: 0

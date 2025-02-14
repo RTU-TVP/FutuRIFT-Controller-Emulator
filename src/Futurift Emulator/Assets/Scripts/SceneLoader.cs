@@ -3,20 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private string sceneName;
+    [SerializeField] private int sceneIndex = 1;
+    [SerializeField] private bool autoLoadScene;
 
     private AsyncOperation _asyncOperation;
 
     private void Start()
     {
-        _asyncOperation = SceneManager.LoadSceneAsync(sceneName);
-        if (_asyncOperation != null)
+        _asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        _asyncOperation.allowSceneActivation = false;
+        
+        if (autoLoadScene)
         {
-            _asyncOperation.allowSceneActivation = false;
-        }
-        else
-        {
-            Debug.LogError("Failed to load scene: " + sceneName);
+            LoadScene();
         }
     }
 
