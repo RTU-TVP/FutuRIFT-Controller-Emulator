@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 3109223796106852827}
   - component: {fileID: 5765020730108799400}
   - component: {fileID: 3783839360180414313}
-  - component: {fileID: 2657314385117375402}
+  - component: {fileID: 3456121915055157092}
   m_Layer: 0
   m_Name: Sphere_LP
   m_TagString: Untagged
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532c0c00f1aa53f489d554c4d88887bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2657314385117375402
+--- !u!114 &3456121915055157092
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,7 +379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cdf6b34a1d85074c9df5acc6de1028f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portShower: {fileID: 0}
 --- !u!1 &1369663046701816254
 GameObject:
   m_ObjectHideFlags: 0
