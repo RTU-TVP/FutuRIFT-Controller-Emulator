@@ -23,8 +23,8 @@ public class SetupScript : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(RefreshCoroutine());
         ReadOptions();
+        StartCoroutine(RefreshCoroutine());
     }
 
     private void OnEnable()
@@ -79,8 +79,8 @@ public class SetupScript : MonoBehaviour
 
         while (true)
         {
-            RefreshComPorts();
             RefreshNetworkAddresses();
+            RefreshComPorts();
 
             yield return wait;
         }
