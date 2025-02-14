@@ -15,8 +15,6 @@ public class CarFutuRIFTController : MonoBehaviour
         {
             comPortNum = int.Parse(comPort[3..]);
         }
-        
-        Debug.Log($"Using COM port: {comPortNum}");
 
         _comPortSender = new ComPortSender(
             comPortNum
