@@ -26,8 +26,8 @@ public class SetupScript : MonoBehaviour
 
     private void Start()
     {
-        ReadOptions();
         StartCoroutine(RefreshCoroutine());
+        ReadOptions();
     }
 
     private void OnEnable()
@@ -47,6 +47,7 @@ public class SetupScript : MonoBehaviour
         optionsFileTextLocation.text = EmulatorOptionsReader.OptionsFileLocation;
 
         var options = EmulatorOptionsReader.ReadEmulatorOptions();
+
         udpPortInput.text = options.ListenUdpPortNumber == 0 ? "6065" : options.ListenUdpPortNumber.ToString();
 
         comPortsDropDown.value = comPortsDropDown.options
@@ -66,8 +67,7 @@ public class SetupScript : MonoBehaviour
 
         options.ListenUdpPortNumber = int.Parse(udpPortInput.text);
 
-        var optionsJson = JsonUtility.ToJson(options);
-        File.WriteAllText(EmulatorOptionsReader.OptionsFileLocation, optionsJson);
+        EmulatorOptionsReader.SaveEmulatorOptions(options);
     }
 
     private IEnumerator RefreshCoroutine()
@@ -78,7 +78,7 @@ public class SetupScript : MonoBehaviour
         {
             RefreshComPorts();
             RefreshNetworkAddresses();
-        
+
             yield return wait;
         }
     }
