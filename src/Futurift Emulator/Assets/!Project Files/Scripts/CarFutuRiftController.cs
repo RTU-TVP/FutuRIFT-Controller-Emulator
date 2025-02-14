@@ -4,7 +4,8 @@ using UnityEngine;
 public class CarFutuRIFTController : MonoBehaviour
 {
     private FutuRIFTController _controller;
-
+    private ComPortSender _comPortSender;
+    
     private void Start()
     {
         var comPort = EmulatorOptionsReader.ReadEmulatorOptions().ComPort;
@@ -14,14 +15,19 @@ public class CarFutuRIFTController : MonoBehaviour
         {
             comPortNum = int.Parse(comPort[3..]);
         }
+        
+        Debug.Log($"Using COM port: {comPortNum}");
 
+        _comPortSender = new ComPortSender(
+            comPortNum
+        );
+        
         _controller = new FutuRIFTController(
-            new ComPortSender(
-                comPortNum
-            )
+            _comPortSender
         );
 
-        _controller.Start();
+        _comPortSender?.Connect();
+        _controller?.Start();
     }
 
     private void Update()
@@ -31,13 +37,14 @@ public class CarFutuRIFTController : MonoBehaviour
             return;
         }
 
-        var euler = transform.eulerAngles;
+        var euler = transform.localEulerAngles;
         _controller.Pitch = euler.x > 180 ? euler.x - 360 : euler.x;
         _controller.Roll = -(euler.z > 180 ? euler.z - 360 : euler.z);
     }
 
     private void OnDestroy()
     {
+        _comPortSender?.Disconnect();
         _controller?.Stop();
     }
 }

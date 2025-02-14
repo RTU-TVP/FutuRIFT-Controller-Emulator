@@ -25,4 +25,17 @@ internal class EmulatorOptionsReader
             return new EmulatorOptions { ListenUdpPortNumber = 6065 };
         }
     }
+    
+    public static void SaveEmulatorOptions(EmulatorOptions options)
+    {
+        try
+        {
+            var text = JsonUtility.ToJson(options);
+            File.WriteAllText(OptionsFileLocation, text);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Can't save options file: {ex.Message}");
+        }
+    }
 }
