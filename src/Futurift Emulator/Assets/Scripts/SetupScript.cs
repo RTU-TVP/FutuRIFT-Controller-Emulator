@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using UnityEngine;
 using TMPro;
-using System.IO;
 using System.Net.Sockets;
 using UnityEngine.UI;
 
@@ -17,10 +16,8 @@ public class SetupScript : MonoBehaviour
     [SerializeField] private Transform networkAddressesContainer;
     [SerializeField] private TMP_InputField exampleNetworkText;
 
-    [SerializeField] private TextMeshProUGUI optionsFileTextLocation;
-
-    [SerializeField] private Button saveButton;
     [SerializeField] private Button startEmulatorButton;
+    [SerializeField] private SceneLoader sceneLoader;
 
     private readonly List<TMP_InputField> _networkAddresses = new();
 
@@ -33,22 +30,20 @@ public class SetupScript : MonoBehaviour
     private void OnEnable()
     {
         startEmulatorButton.onClick.AddListener(SaveOptions);
-        saveButton.onClick.AddListener(SaveOptions);
+        startEmulatorButton.onClick.AddListener(LoadScene);
     }
 
     private void OnDisable()
     {
         startEmulatorButton.onClick.RemoveListener(SaveOptions);
-        saveButton.onClick.RemoveListener(SaveOptions);
+        startEmulatorButton.onClick.RemoveListener(LoadScene);
     }
 
     private void ReadOptions()
     {
-        optionsFileTextLocation.text = EmulatorOptionsReader.OptionsFileLocation;
-
         var options = EmulatorOptionsReader.ReadEmulatorOptions();
 
-        udpPortInput.text = options.ListenUdpPortNumber == 0 ? "6065" : options.ListenUdpPortNumber.ToString();
+        udpPortInput.text = options.ListenUdpPortNumber.ToString();
 
         comPortsDropDown.value = comPortsDropDown.options
             .Select((item, index) => new { item, index })
@@ -58,17 +53,25 @@ public class SetupScript : MonoBehaviour
 
     private void SaveOptions()
     {
-        var options = new EmulatorOptions();
-
+        string comPort = null;
         if (comPortsDropDown.options.Any())
         {
-            options.ComPort = comPortsDropDown.options[comPortsDropDown.value].text;
+            var index = comPortsDropDown.value;
+            comPort = comPortsDropDown.options[index].text;
         }
 
-        options.ListenUdpPortNumber = int.Parse(udpPortInput.text);
+        var listenUdpPortNumber = int.Parse(udpPortInput.text);
+
+        var options = new EmulatorOptions
+        {
+            ComPort = comPort,
+            ListenUdpPortNumber = listenUdpPortNumber
+        };
 
         EmulatorOptionsReader.SaveEmulatorOptions(options);
     }
+    
+    private void LoadScene() => sceneLoader.LoadScene();
 
     private IEnumerator RefreshCoroutine()
     {
