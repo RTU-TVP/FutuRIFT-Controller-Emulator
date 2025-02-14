@@ -17,6 +17,7 @@ public class SetupScript : MonoBehaviour
     [SerializeField] private TMP_InputField exampleNetworkText;
 
     [SerializeField] private Button startEmulatorButton;
+    [SerializeField] private SceneLoader sceneLoader;
 
     private readonly List<TMP_InputField> _networkAddresses = new();
 
@@ -29,11 +30,13 @@ public class SetupScript : MonoBehaviour
     private void OnEnable()
     {
         startEmulatorButton.onClick.AddListener(SaveOptions);
+        startEmulatorButton.onClick.AddListener(LoadScene);
     }
 
     private void OnDisable()
     {
         startEmulatorButton.onClick.RemoveListener(SaveOptions);
+        startEmulatorButton.onClick.RemoveListener(LoadScene);
     }
 
     private void ReadOptions()
@@ -67,6 +70,8 @@ public class SetupScript : MonoBehaviour
 
         EmulatorOptionsReader.SaveEmulatorOptions(options);
     }
+    
+    private void LoadScene() => sceneLoader.LoadScene();
 
     private IEnumerator RefreshCoroutine()
     {
